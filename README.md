@@ -86,7 +86,7 @@ nanovlm-lab/
 ### Step 2: Install Dependencies
 
 ```bash
-pip install transformers datasets==4.4.1 gcsfs huggingface_hub trl peft accelerate -qqq
+pip install transformers datasets==4.4.1 gcsfs huggingface_hub trl matplotlib einops peft accelerate -qqq
 ```
 ---
 
