@@ -4,7 +4,7 @@
 
 # NanoVLM-Lab
 
-<i>Advanced Training Framework for Small Vision-Language Models</i>
+<i>Compact Training Framework for Small Vision-Language Models</i>
 
 </div>
 
