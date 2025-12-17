@@ -34,15 +34,15 @@ This framework is designed for researchers and practitioners who want to:
 
 ## ✨ Features
 
-* 🎯 **Multiple Training Approaches**
+* **Multiple Training Approaches**
   - Supervised Fine-Tuning (SFT) for standard supervised learning
   - Direct Preference Optimization (DPO) for preference-based alignment
   - Group Relative Policy Optimization (GRPO) with GSPO and DAPO variants
-* 📊 **Flexible Dataset Handling** — support for image-text pairs and preference datasets
-* 🚀 **HuggingFace-Powered** — built on top of HuggingFace's Transformers and TRL implementations
-* ⚡ **Efficient Training** — optimized for single and multi-GPU setups
-* 📝 **Example Jupyter Notebooks** — complete end-to-end examples for each trainer
-* 🔧 **Easy Integration** — drop-in replacement for standard training pipelines
+* **Flexible Dataset Handling** — support for image-text pairs and preference datasets
+* **HuggingFace-Powered** — built on top of HuggingFace's Transformers and TRL implementations
+* **Efficient Training** — optimized for single and multi-GPU setups
+* **Example Jupyter Notebooks** — complete end-to-end examples for each trainer
+* **Easy Integration** — drop-in replacement for standard training pipelines
 
 ---
 
