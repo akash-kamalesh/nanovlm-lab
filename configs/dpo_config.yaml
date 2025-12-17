@@ -1,0 +1,88 @@
+# NanoVLM DPO (Direct Preference Optimization) Configuration
+# This config file defines all parameters for DPO training
+
+# Training type
+training_type: "dpo"
+
+# Model configuration
+model:
+  model_name_or_path: "lusxvr/nanoVLM-230M-8k"  # Path to pre-trained nanoVLM checkpoint
+  use_lora: true
+  lora_config:
+    r: 16
+    lora_alpha: 16
+    lora_dropout: 0.1
+    target_modules: ['down_proj', 'o_proj', 'k_proj', 'q_proj', 'gate_proj', 'up_proj', 'v_proj']
+    use_dora: false
+    init_lora_weights: "gaussian"
+  model_type: "nanovlm"  # Model architecture type
+  initialize_from_config: false  # Set to true if using "initialize" to create fresh model from config
+
+# Dataset configuration
+dataset:
+  train_data_path: "LYM2024/RLAIF-V-Dataset_subset"  # HuggingFace dataset repo ID
+  train_split: "train"  # Split name for training data (default: "train")
+  eval_data_path: "LYM2024/RLAIF-V-Dataset_subset"   # HuggingFace dataset repo ID (optional, if null will split train data 80/20)
+  eval_split: "test"  # Split name for evaluation data (default: "test")
+  dataset_format: "preference"  # Dataset format: 'preference' for winner/loser pairs
+  max_samples: null  # Maximum number of samples to use (null = use all)
+  rename_columns:
+    question: "prompt"
+  preprocessing_fn: "dataset_preprocessing_dpo.py"  # Path to preprocessing functions file (optional)
+
+# Training hyperparameters
+training:
+  output_dir: "./dpo_output"  # Directory to save checkpoints and outputs
+  num_train_epochs: 3
+  max_steps: -1  # -1 means use num_train_epochs
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 4
+  
+  # Learning rates
+  learning_rate: 5e-5
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  
+  # Learning rate schedule
+  lr_scheduler_type: "cosine"
+  
+  # Mixed precision training
+  bf16: true  # Use bfloat16 precision
+  fp16: false  # Use float16 precision (alternative to bf16)
+  
+  # Checkpointing and logging
+  save_strategy: "steps"
+  save_steps: 500
+  eval_strategy: "steps"
+  eval_steps: 5
+  logging_steps: 5
+  save_total_limit: 3
+  
+  # Seed and reproducibility
+  seed: 42
+  
+  # Device configuration
+  device: "cuda"
+  n_gpu: 1
+
+# DPO-specific configuration
+dpo:
+  beta: 0.1  # DPO temperature parameter (higher = stronger preference signal)
+  dpo_loss_type: "sigmoid"  # Loss type: 'sigmoid' or 'hinge'
+  label_smoothing: 0.0  # Label smoothing for preference pairs
+  loss_type: "sigmoid"  # Alias for dpo_loss_type
+
+# Model save configuration
+save:
+  save_model_path: "./dpo_output/final_model"
+  save_tokenizer: true
+  save_image_processor: true
+
+# Logging configuration
+logging:
+  use_wandb: false
+  wandb_project: "nanovlm-dpo"
+  wandb_entity: null
+  report_to: []

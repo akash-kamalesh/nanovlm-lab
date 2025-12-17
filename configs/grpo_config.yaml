@@ -1,0 +1,136 @@
+# NanoVLM GRPO (Group Relative Policy Optimization) Configuration
+# This config file defines all parameters for GRPO training
+# 
+# GRPO Variants (determined by loss_type and other parameters):
+# - GRPO: loss_type="grpo", importance_sampling_level="token", mask_truncated_completions=true
+# - GSPO: loss_type="dr_grpo", importance_sampling_level="sequence", mask_truncated_completions=false
+# - DAPO: loss_type="dapo", with epsilon and optional epsilon_high/delta for two-sided clipping
+# - SAPO: loss_type="sapo", with sapo_temperature_pos and sapo_temperature_neg
+
+# Training type
+training_type: "grpo"
+
+# Model configuration
+model:
+  model_name_or_path: "lusxvr/nanoVLM-230M-8k"  # Path to pre-trained nanoVLM checkpoint
+  use_lora: true  # Enable LoRA fine-tuning
+  lora_config:
+    r: 16
+    lora_alpha: 16
+    lora_dropout: 0.1
+    target_modules: ['down_proj', 'o_proj', 'k_proj', 'q_proj', 'gate_proj', 'up_proj', 'v_proj']
+    use_dora: false
+    init_lora_weights: "gaussian"
+  model_type: "nanovlm"  # Model architecture type
+  initialize_from_config: false  # Set to true if using "initialize" to create fresh model from config
+
+# Dataset configuration
+dataset:
+  train_data_path: "lmms-lab/multimodal-open-r1-8k-verified"  # HuggingFace dataset repo ID
+  train_split: "train[:5%]"  # Split name for training data (default: "train")
+  eval_data_path: null  # HuggingFace dataset repo ID (optional, if null will split train data 80/20)
+  eval_split: "test"  # Split name for evaluation data (default: "test")
+  dataset_format: "grpo"  # Dataset format: 'grpo' for completions with rewards
+  max_samples: null  # Maximum number of samples to use (null = use all)
+  rename_columns: {}  # Optional: rename columns, e.g., {"question": "prompt"}
+  preprocessing_fn: "dataset_preprocessing_grpo.py"  # Path to preprocessing functions file (optional)
+  reward_functions_fn: "reward_functions.py"  # Path to reward functions file (required for GRPO)
+
+# Training hyperparameters
+training:
+  output_dir: "./grpo_output"  # Directory to save checkpoints and outputs
+  num_train_epochs: 1
+  max_steps: -1  # -1 means use num_train_epochs
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 4
+  
+  # Learning rates
+  learning_rate: 5e-6
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  
+  # Learning rate schedule
+  lr_scheduler_type: "cosine"
+  
+  # Mixed precision training
+  bf16: true  # Use bfloat16 precision
+  fp16: false  # Use float16 precision (alternative to bf16)
+  
+  # Checkpointing and logging
+  save_strategy: "steps"
+  save_steps: 5
+  eval_strategy: "steps"
+  eval_steps: 5
+  logging_steps: 5
+  
+  # Seed and reproducibility
+  seed: 42
+  
+  # Device configuration
+  device: "cuda"
+  n_gpu: 1
+
+# GRPO-specific configuration
+grpo:
+  # Generation parameters
+  num_generations: 3  # Number of completions per prompt (G in GRPO paper)
+  max_prompt_length: 2048  # Maximum prompt length
+  max_completion_length: 512  # Maximum completion length
+  temperature: 1.0  # Temperature for generation (1.0 = no temperature scaling)
+  top_p: 1.0  # Top-p sampling parameter (1.0 = no top-p filtering)
+  top_k: 0  # Top-k sampling (0 = disabled)
+  
+  # Loss configuration - choose based on variant:
+  # For GRPO (default):
+  loss_type: "grpo"  # "grpo", "bnpo", "dr_grpo", "dapo", "cispo", "sapo"
+  importance_sampling_level: "token"  # "token" or "sequence" (sequence for GSPO)
+  mask_truncated_completions: true  # If true, mask truncated completions (false for GSPO)
+  
+  # For GSPO (Group Supervised Policy Optimization):
+  # loss_type: "dr_grpo"
+  # importance_sampling_level: "sequence"
+  # mask_truncated_completions: false
+  
+  # For DAPO (Divergence-Aware Policy Optimization) with two-sided clipping:
+  # loss_type: "dapo"
+  # epsilon: 0.2  # Lower clipping bound
+  # epsilon_high: 0.28  # Upper clipping bound (can be different from epsilon)
+  # delta: 10.0  # Optional upper bound for importance ratio (two-sided clipping)
+  
+  # For SAPO (Sigmoid-based Advantage Policy Optimization):
+  # loss_type: "sapo"
+  # sapo_temperature_pos: 1.0  # Temperature for positive advantages
+  # sapo_temperature_neg: 1.0  # Temperature for negative advantages
+  
+  # Common parameters
+  beta: 0.1  # KL penalty coefficient
+  epsilon: 0.2  # Clipping parameter (epsilon_low for DAPO)
+  epsilon_high: null  # Upper clipping bound (defaults to epsilon if not set)
+  delta: null  # Optional upper bound for importance ratio (two-sided clipping for DAPO)
+  scale_rewards: "group"  # "group", "batch", or "none" - how to scale rewards
+  
+  # SAPO-specific parameters (only used when loss_type="sapo")
+  sapo_temperature_pos: null  # Temperature for positive advantages in SAPO
+  sapo_temperature_neg: null  # Temperature for negative advantages in SAPO
+  
+  # Reference model
+  disable_dropout: true  # Disable dropout during training
+  
+  # Logging completions
+  log_completions: false  # Whether to log generated completions during training
+  num_completions_to_print: 5  # Number of completions to log per batch
+
+# Model save configuration
+save:
+  save_model_path: "./grpo_output/final_model"
+  save_tokenizer: true
+  save_image_processor: true
+
+# Logging configuration
+logging:
+  use_wandb: false
+  wandb_project: "nanovlm-grpo"
+  wandb_entity: null
+  report_to: []
