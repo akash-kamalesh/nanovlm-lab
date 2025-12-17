@@ -71,14 +71,6 @@ mv nanoVLM/ RL-VLM-Lab/nanovlm && \
 mv RL-VLM-Lab/rlvlm/datasets.py RL-VLM-Lab/rlvlm/collators.py RL-VLM-Lab/nanovlm/data/
 ```
 
-### Step 2: Clone nanoVLM Repository
-
-Clone the original nanoVLM repository and place it in the root of the NanoVLM-Lab directory:
-
-```bash
-git clone https://github.com/huggingface/nanoVLM.git
-```
-
 Your project structure should look like this:
 
 ```
@@ -91,7 +83,7 @@ nanovlm-lab/
 └── setup.py
 ```
 
-### Step 3: Install Dependencies
+### Step 2: Install Dependencies
 
 ```bash
 pip install -e .
