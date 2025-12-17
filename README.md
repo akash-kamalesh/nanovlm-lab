@@ -66,9 +66,9 @@ Below is a real example of how DPO preference tuning improves model outputs:
 ### Step 1: Clone NanoVLM-Lab
 
 ```bash
-git clone https://github.com/huggingface/nanoVLM.git && \
-mv nanoVLM/ RL-VLM-Lab/nanovlm && \
-mv RL-VLM-Lab/rlvlm/datasets.py RL-VLM-Lab/rlvlm/collators.py RL-VLM-Lab/nanovlm/data/
+git clone https://github.com/huggingface/nanoVLM.git && git clone https://github.com/akash-kamalesh/nanovlm-lab.git && \
+mv nanoVLM/ nanovlm-lab/nanovlm && \
+mv nanovlm-lab/rlvlm/datasets.py nanovlm-lab/rlvlm/collators.py nanovlm-lab/nanovlm/data/
 ```
 
 Your project structure should look like this:
@@ -86,7 +86,7 @@ nanovlm-lab/
 ### Step 2: Install Dependencies
 
 ```bash
-pip install -e .
+pip install transformers datasets==4.4.1 gcsfs huggingface_hub trl peft accelerate -qqq
 ```
 ---
 

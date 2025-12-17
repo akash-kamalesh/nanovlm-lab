@@ -55,6 +55,9 @@ def load_config(config_path: str) -> Dict[str, Any]:
     """
     config_path = Path(config_path)
     
+    if not config_path.is_absolute():
+        config_path = project_root / config_path
+    
     if not config_path.exists():
         raise FileNotFoundError(f"Config file not found: {config_path}")
     
