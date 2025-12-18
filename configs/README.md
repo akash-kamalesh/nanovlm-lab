@@ -394,6 +394,45 @@ logging:
   wandb_project: "nanovlm-experiments"
 ```
 
+### SFT with Fresh Model Initialization
+```yaml
+training_type: "sft"
+model:
+  model_name_or_path: "initialize"  # Create fresh model from config
+  initialize_from_config: true
+  load_backbone: true  # Load pretrained SigLIP + SmolLM2 weights
+  use_lora: true
+  lora_config:
+    r: 16
+    lora_alpha: 16
+    lora_dropout: 0.1
+    target_modules: ['down_proj', 'o_proj', 'k_proj', 'q_proj', 'gate_proj', 'up_proj', 'v_proj']
+  vlm_config:  # Customize model architecture (optional)
+    vit_model_type: "google/siglip2-base-patch16-512"
+    lm_model_type: "HuggingFaceTB/SmolLM2-360M-Instruct"
+    lm_tokenizer: "HuggingFaceTB/SmolLM2-360M-Instruct"
+    vit_img_size: 512
+    max_img_size: 2048
+    mp_image_token_length: 64
+dataset:
+  train_data_path: "lmms-lab/multimodal-open-r1-8k-verified"
+  train_split: "train[:5%]"
+  dataset_format: "vqa"
+training:
+  output_dir: "./sft_output"
+  num_train_epochs: 3
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  learning_rate: 5e-5
+  lr_mp: 5e-3
+  lr_vision_backbone: 5e-5
+  lr_language_backbone: 5e-5
+  warmup_ratio: 0.1
+  bf16: true
+  eval_strategy: "steps"
+  eval_steps: 500
+```
+
 ### DPO (Preference Alignment)
 ```yaml
 training_type: "dpo"

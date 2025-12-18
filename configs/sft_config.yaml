@@ -17,6 +17,18 @@ model:
     init_lora_weights: "gaussian"
   model_type: "nanovlm"  # Model architecture type
   initialize_from_config: false  # Set to true if using "initialize" to create fresh model from config
+  load_backbone: true  # Whether to load pretrained backbone weights when initializing fresh model
+  
+  # VLM Config for fresh model initialization (only used when model_name_or_path="initialize" or initialize_from_config=true)
+  # Uncomment and modify to customize the model architecture
+  # vlm_config:
+  #   vit_model_type: "google/siglip2-base-patch16-512"  # Vision encoder backbone
+  #   lm_model_type: "HuggingFaceTB/SmolLM2-360M-Instruct"  # Language model backbone
+  #   lm_tokenizer: "HuggingFaceTB/SmolLM2-360M-Instruct"  # Tokenizer to use
+  #   vit_img_size: 512  # Vision encoder image size
+  #   max_img_size: 2048  # Maximum image size before processing
+  #   mp_image_token_length: 64  # Number of image tokens after projection
+  #   lm_max_length: 4096  # Maximum sequence length
 
 # Dataset configuration
 dataset:

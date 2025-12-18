@@ -296,6 +296,7 @@ def run_sft_training(config: Dict[str, Any]) -> None:
     
     try:
         from nanovlm.models.vision_language_model import VisionLanguageModel
+        from nanovlm.models.config import VLMConfig
         from nanovlm.data.processors import get_tokenizer, get_image_processor
         from nanovlm_sft_trainer import NanoVLMSFTTrainer, NanoVLMSFTConfig, create_sft_dataset
     except ImportError as e:
@@ -319,8 +320,20 @@ def run_sft_training(config: Dict[str, Any]) -> None:
     
     if model_path.lower() == "initialize" or initialize_from_config:
         logger.info("Creating fresh nanoVLM model from config")
-        # TODO: Implement model initialization from config
-        raise NotImplementedError("Model initialization from config not yet implemented")
+        
+        # Get vlm_config from yaml or use defaults
+        vlm_config_dict = model_config.get('vlm_config', {})
+        
+        # Create VLMConfig with any overrides from yaml
+        vlm_cfg = VLMConfig(**vlm_config_dict) if vlm_config_dict else VLMConfig()
+        
+        # Get load_backbone setting (defaults to True to load pretrained backbones)
+        load_backbone = model_config.get('load_backbone', True)
+        
+        logger.info(f"  VLM Config: vit_model_type={vlm_cfg.vit_model_type}, lm_model_type={vlm_cfg.lm_model_type}")
+        logger.info(f"  Load backbone weights: {load_backbone}")
+        
+        model = VisionLanguageModel(vlm_cfg, load_backbone=load_backbone)
     else:
         logger.info(f"Loading pre-trained model from: {model_path}")
         model = VisionLanguageModel.from_pretrained(model_path)
