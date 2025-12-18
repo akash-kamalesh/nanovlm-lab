@@ -147,11 +147,15 @@ For major changes, please open an issue first to discuss proposed changes.
 If you find NanoVLM-Lab useful in your research, please consider citing it:
 
 ```bibtex
-@software{nanovlm_lab,
-  title={NanoVLM-Lab: Advanced Training Framework for Small Vision-Language Models},
-  author={Akash Kamalesh},
-  year={2025},
-  url={https://github.com/akash-kamalesh/nanovlm-lab}
+@software{Kamalesh_NanoVLM-Lab_Compact_Training_2025,
+author = {Kamalesh, Akash},
+doi = {10.5281/zenodo.17971745},
+license = {MIT},
+month = dec,
+title = {{NanoVLM-Lab: Compact Training Framework for Small Vision-Language Models}},
+url = {https://github.com/akash-kamalesh/nanovlm-lab},
+version = {1.0.0},
+year = {2025}
 }
 ```
 ---
