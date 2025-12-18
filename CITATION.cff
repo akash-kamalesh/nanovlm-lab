@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Kamalesh"
+  given-names: "Akash"
+title: "NanoVLM-Lab: Compact Training Framework for Small Vision-Language Models"
+version: 1.0.0
+doi: 10.5281/zenodo.17971745
+date-released: 2025-12-18
+url: "https://github.com/akash-kamalesh/nanovlm-lab"
+repository-code: "https://github.com/akash-kamalesh/nanovlm-lab"
+license: MIT
+keywords:
+  - vision-language-models
+  - fine-tuning
+  - preference-tuning
+  - reinforcement-learning
+  - dpo
+  - grpo
+  - sft

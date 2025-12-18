@@ -4,6 +4,8 @@
 
 # NanoVLM-Lab
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17971745.svg)](https://doi.org/10.5281/zenodo.17971745)
+
 <i>Compact Training Framework for Small Vision-Language Models</i>
 
 </div>
