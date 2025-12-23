@@ -90,7 +90,7 @@ nanovlm-lab/
 ```bash
 pip install transformers datasets==4.4.1 gcsfs huggingface_hub trl matplotlib einops peft accelerate -qqq
 ```
-Note: The project was built and tested using PyTorch: 2.7.0 and torchvision 0.22.0
+- Note: The project was built and tested using PyTorch: 2.7.0 and torchvision 0.22.0
 ---
 
 ## 🚀 Quick Start
